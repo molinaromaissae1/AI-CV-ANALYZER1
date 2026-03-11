@@ -1,36 +1,8 @@
-def ats_score(features):
+def score_cv(text):
 
-    score = 0
+    experience = text.lower().count("experience")
+    education = text.lower().count("university") + text.lower().count("master") + text.lower().count("bachelor")
+    skills = text.lower().count("python") + text.lower().count("excel") + text.lower().count("data")
+    languages = text.lower().count("english") + text.lower().count("french")
 
-    if features["experience"] >= 5:
-        score += 30
-
-    elif features["experience"] >= 2:
-        score += 20
-
-    if features["education"] == "phd":
-        score += 25
-
-    elif features["education"] == "master":
-        score += 20
-
-    elif features["education"] == "bachelor":
-        score += 10
-
-    score += len(features["skills"]) * 10
-
-    score += len(features["languages"]) * 5
-
-    if features["companies"] >= 3:
-        score += 10
-
-    if score >= 70:
-        decision = "Selected"
-
-    elif score >= 40:
-        decision = "Maybe"
-
-    else:
-        decision = "Rejected"
-
-    return score, decision
+    return experience, education, skills, languages
