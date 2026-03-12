@@ -1,25 +1,32 @@
 import re
 
+# -----------------------
+# EXPERIENCE
+# -----------------------
+
 def extract_experience(text):
 
-    years = re.findall(r'20\d{2}', text)
-    years = [int(y) for y in years]
+    years = re.findall(r'\b\d+\s*(ans|an)\b', text.lower())
 
-    if len(years) < 2:
-        return 0
+    return len(years)
 
-    return max(years) - min(years)
 
+# -----------------------
+# EDUCATION
+# -----------------------
 
 def extract_education(text):
 
     text = text.lower()
 
-    if "bac+5" in text or "master" in text:
+    if "bac+5" in text:
         return "Bac+5"
 
-    if "bac+3" in text or "licence" in text:
+    if "bac+3" in text:
         return "Bac+3"
+
+    if "bac+2" in text:
+        return "Bac+2"
 
     if "bac" in text:
         return "Bac"
@@ -27,52 +34,90 @@ def extract_education(text):
     return "Unknown"
 
 
+# -----------------------
+# LANGUAGES
+# -----------------------
+
 def extract_languages(text):
 
-    section = re.search(
-        r'langues?(.*?)(compétences|skills|expérience|formation)',
-        text.lower(),
-        re.DOTALL
-    )
+    text = text.lower()
 
-    if section:
+    languages_list = [
+        "français",
+        "francais",
+        "anglais",
+        "english",
+        "arabe",
+        "arabic"
+    ]
 
-        content = section.group(1)
+    found = []
 
-        languages = re.findall(r'[a-zéèêàç]+', content)
+    for lang in languages_list:
+        if lang in text:
+            found.append(lang)
 
-        return list(set(languages))
+    return found
 
-    return []
 
+# -----------------------
+# SKILLS
+# -----------------------
 
 def extract_skills(text):
 
-    section = re.search(
-        r'(compétences|skills)(.*?)(expérience|formation|langues)',
-        text.lower(),
-        re.DOTALL
-    )
+    text = text.lower()
 
-    if section:
+    skills_list = [
+        "python",
+        "excel",
+        "power bi",
+        "sql",
+        "gestion",
+        "administrative",
+        "communication",
+        "analyse",
+        "data"
+    ]
 
-        content = section.group(2)
+    found = []
 
-        skills = re.findall(r'[a-zéèêàç]+', content)
+    for skill in skills_list:
+        if skill in text:
+            found.append(skill)
 
-        return list(set(skills))
+    return found
 
-    return []
 
+# -----------------------
+# SECTOR
+# -----------------------
 
 def extract_sector(text):
 
     text = text.lower()
 
-    words = re.findall(r'[a-zéèêàç]{5,}', text)
+    sectors = [
+        "informatique",
+        "data",
+        "finance",
+        "marketing",
+        "administration",
+        "industrie"
+    ]
 
-    return words[:3]
+    found = []
 
+    for s in sectors:
+        if s in text:
+            found.append(s)
+
+    return found
+
+
+# -----------------------
+# COMPANIES
+# -----------------------
 
 def extract_companies(text):
 
