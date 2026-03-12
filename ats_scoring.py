@@ -1,35 +1,27 @@
-def score_cv(text):
+def calculate_ats_score(experience, skills, languages, education):
 
-    text = text.lower()
+    score = 0
 
     # experience
-    experience = text.count("expérience") + text.count("stage") + text.count("emploi")
-
-    # education
-    education = (
-        text.count("formation")
-        + text.count("université")
-        + text.count("licence")
-        + text.count("master")
-        + text.count("baccalauréat")
-    )
+    score += experience * 20
 
     # skills
-    skills = (
-        text.count("compétence")
-        + text.count("gestion")
-        + text.count("communication")
-        + text.count("organisation")
-        + text.count("excel")
-        + text.count("word")
-    )
+    score += len(skills) * 5
 
     # languages
-    languages = (
-        text.count("français")
-        + text.count("anglais")
-        + text.count("arabe")
-        + text.count("langues")
-    )
+    score += len(languages) * 5
 
-    return experience, education, skills, languages
+    # education
+    if education == "Bac+5":
+        score += 20
+    elif education == "Bac+3":
+        score += 15
+    elif education == "Bac+2":
+        score += 10
+    else:
+        score += 5
+
+    if score > 100:
+        score = 100
+
+    return score
