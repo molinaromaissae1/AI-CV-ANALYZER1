@@ -15,11 +15,7 @@ def extract_experience(text):
     if "stage" in text or "stagiaire" in text:
         experience += 1
 
-    # travail
-    if "emploi" in text or "travail" in text or "poste" in text:
-        experience += 1
-
-    # dates
+    # chercher années
     years = re.findall(r'20\d{2}', text)
 
     if len(years) >= 2:
@@ -65,10 +61,7 @@ def extract_languages(text):
         "anglais",
         "english",
         "arabe",
-        "arabic",
-        "espagnol",
-        "allemand",
-        "italien"
+        "arabic"
     ]
 
     found = []
@@ -81,7 +74,7 @@ def extract_languages(text):
 
 
 # -----------------------
-# SKILLS RH
+# SKILLS (RH)
 # -----------------------
 
 def extract_skills(text):
@@ -90,36 +83,29 @@ def extract_skills(text):
 
     skills_list = [
 
+    # RH
     "ressources humaines",
     "recrutement",
-    "gestion des talents",
-    "gestion des compétences",
     "gestion du personnel",
     "administration du personnel",
+    "gestion des talents",
 
-    "entretiens",
-    "sélection des candidats",
-    "onboarding",
-
-    "gestion des dossiers",
+    # administratif
     "gestion administrative",
+    "gestion des dossiers",
     "saisie de données",
 
-    "paie",
-    "gestion de paie",
-
-    "formation",
-
+    # soft skills
     "communication",
     "travail d'équipe",
     "leadership",
-
     "organisation",
-    "planification",
 
+    # bureautique
     "excel",
     "word",
     "powerpoint",
+    "power point",
     "outlook"
     ]
 
@@ -142,6 +128,9 @@ def extract_sector(text):
 
     if "ressources humaines" in text or "rh" in text:
         return "Ressources Humaines"
+
+    if "gestion" in text:
+        return "Gestion / Administration"
 
     return "Unknown"
 
