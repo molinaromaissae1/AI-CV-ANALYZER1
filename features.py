@@ -19,7 +19,7 @@ if "5eme" in text or "5ème" in text:
 if "4eme" in text or "4ème" in text:
     return "Bac+4"
 
-if re.search(r"\b3\s*e?me\b", text) or "3ème" in text or "3eme" in text:
+    if re.search(r"\b3\s*e?me\b", text) or "3ème" in text or "3eme" in text:
     return "Bac+3"
 
 if "licence" in text or "bac+3" in text:
