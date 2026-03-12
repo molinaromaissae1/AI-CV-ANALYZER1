@@ -26,8 +26,7 @@ if "licence" in text or "bac+3" in text:
 if "bac+2" in text or "dut" in text or "bts" in text:
     return "Bac+2"
 
-if "bac" in text:
-    return "Bac"
+
 
 return "Unknown"
  if "bac" in text:
