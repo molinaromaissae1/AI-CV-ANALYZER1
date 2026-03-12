@@ -9,7 +9,8 @@ uploaded_file = st.file_uploader("Upload CV", type=["pdf", "docx"])
 if uploaded_file is not None:
 
     text = read_cv(uploaded_file)
-
+st.subheader("Text detected in CV")
+st.write(text)
     st.subheader("Extracted Information")
 
     experience, education, skills, languages = score_cv(text)
