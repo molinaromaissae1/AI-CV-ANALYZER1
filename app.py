@@ -1,15 +1,19 @@
 import streamlit as st
 from reader import extract_text_from_pdf
 from preprocess import preprocess_text
+
 from features import (
-    
-    
     extract_skills,
     extract_languages,
     extract_companies,
     extract_sector
 )
-from education_experience import extract_education, extract_experience
+
+from education_experience import (
+    extract_education,
+    extract_experience,
+    extract_experience_months
+)
 st.set_page_config(
     page_title="AI CV Analyzer",
     page_icon="🤖",
@@ -30,19 +34,21 @@ if uploaded_file is not None:
 
     clean_text = preprocess_text(text)
 
-    experience = extract_experience(clean_text)
-    education = extract_education(clean_text)
-    skills = extract_skills(clean_text)
-    languages = extract_languages(clean_text)
-    sector = extract_sector(clean_text)
-    companies = extract_companies(clean_text)
+experience = extract_experience(clean_text)
+experience_months = extract_experience_months(clean_text)
+
+education = extract_education(clean_text)
+skills = extract_skills(clean_text)
+languages = extract_languages(clean_text)
+sector = extract_sector(clean_text)
+companies = extract_companies(clean_text)
 
     st.subheader("📊 Extracted Information")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric("Years of Experience", experience)
+        st.metric("Experience Duration", experience)
         st.metric("Education Level", education)
 
     with col2:
@@ -65,7 +71,7 @@ if uploaded_file is not None:
 
     score = 0
 
-    score += experience * 20
+    score += min(experience_months * 5, 20)
     score += len(skills) * 5
     score += len(languages) * 5
 
