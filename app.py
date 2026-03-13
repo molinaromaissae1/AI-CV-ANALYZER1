@@ -55,15 +55,15 @@ with col2:
         st.metric("Sector", sector)
         st.metric("Companies", companies)
 
-    st.subheader("💼 Skills")
+st.subheader("💼 Skills")
 
-    for skill in skills:
-        st.success(skill)
+for skill in skills:
+    st.success(skill)
 
-    st.subheader("🌍 Languages")
+st.subheader("🌍 Languages")
 
-    for lang in languages:
-        st.info(lang)
+for lang in languages:
+    st.info(lang)
 
     # -----------------
     # ATS SCORE
