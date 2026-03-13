@@ -141,3 +141,24 @@ def extract_companies(text):
         count = 1
 
     return count
+# -------------------------
+# SECTOR
+# -------------------------
+
+def extract_sector(text):
+
+    text = text.lower()
+
+    if "ressources humaines" in text or "rh" in text:
+        return "Ressources Humaines"
+
+    if "finance" in text:
+        return "Finance"
+
+    if "marketing" in text:
+        return "Marketing"
+
+    if "data" in text or "analyse" in text:
+        return "Data"
+    
+    return "General"
