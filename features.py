@@ -5,6 +5,7 @@ import re
 # ==========================
 
 def extract_education(text):
+
     text = text.lower()
 
     if "phd" in text or "doctorat" in text:
@@ -40,6 +41,7 @@ def extract_education(text):
 # ==========================
 
 def extract_experience(text):
+
     text = text.lower()
 
     if "stage" in text or "expérience" in text or "experience" in text:
@@ -53,6 +55,7 @@ def extract_experience(text):
 # ==========================
 
 def extract_skills(text):
+
     text = text.lower()
 
     skills_list = [
@@ -82,6 +85,7 @@ def extract_skills(text):
 # ==========================
 
 def extract_languages(text):
+
     text = text.lower()
 
     languages = []
@@ -103,6 +107,7 @@ def extract_languages(text):
 # ==========================
 
 def extract_sector(text):
+
     text = text.lower()
 
     if "ressources humaines" in text or "rh" in text:
@@ -116,6 +121,7 @@ def extract_sector(text):
 # ==========================
 
 def extract_companies(text):
+
     text = text.lower()
 
     keywords = [
