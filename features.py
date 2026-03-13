@@ -83,10 +83,10 @@ def extract_skills(text):
         "powerpoint"
     ]
 
-found = []
+    found = []
 
-for skill in skills_list:
-      if skill in text:
+    for skill in skills_list:
+        if skill in text:
             found.append(skill)
 
     return found
