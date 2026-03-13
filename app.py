@@ -45,7 +45,7 @@ companies = extract_companies(clean_text)
 
 st.subheader("📊 Extracted Information")
 
- col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
     with col1:
         st.metric("Experience Duration", experience)
