@@ -26,16 +26,20 @@ def extract_education(text):
 
 def extract_experience_months(text):
 
+    import re
+
     text = text.lower()
 
+    # الأشهر
     months = {
         "janvier":1,"février":2,"mars":3,"avril":4,"mai":5,"juin":6,
         "juillet":7,"août":8,"septembre":9,"octobre":10,"novembre":11,"décembre":12
     }
 
-   pattern = r"(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4}).*?(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4})"
+    # format: janvier 2022 - mars 2024
+    pattern_month = r"(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4}).*?(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4})"
 
-    match = re.search(pattern, text)
+    match = re.search(pattern_month, text)
 
     if match:
 
@@ -52,12 +56,49 @@ def extract_experience_months(text):
 
         return total_months
 
+
+    # format: 03/2022 - 09/2023
+    pattern_numeric = r"(\d{1,2})\/(\d{4})\s*[-–]\s*(\d{1,2})\/(\d{4})"
+
+    match = re.search(pattern_numeric, text)
+
+    if match:
+
+        start_month = int(match.group(1))
+        start_year = int(match.group(2))
+
+        end_month = int(match.group(3))
+        end_year = int(match.group(4))
+
+        total_months = (end_year - start_year) * 12 + (end_month - start_month)
+
+        if total_months <= 0:
+            total_months = 1
+
+        return total_months
+
+
+    # format: 2021 - 2023
+    pattern_year = r"(20\d{2}).*?(20\d{2})"
+
+    match = re.search(pattern_year, text)
+
+    if match:
+
+        start_year = int(match.group(1))
+        end_year = int(match.group(2))
+
+        total_months = (end_year - start_year) * 12
+
+        if total_months <= 0:
+            total_months = 12
+
+        return total_months
+
+
+    # stage
     if "stage" in text:
         return 3
 
+
     return 0
-   
-
-
-print("Formation:", extract_education(cv_text))  # Bac+3
-print("Expérience:", extract_experience(cv_text))
