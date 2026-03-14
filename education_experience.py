@@ -102,3 +102,27 @@ def extract_experience_months(text):
 
 
     return 0
+def extract_experience_months_fixed(text):
+
+    import re
+    from datetime import datetime
+
+    experience_keywords = ["stage", "experience", "emploi", "internship"]
+
+    months = 0
+    lines = text.split("\n")
+
+    for line in lines:
+
+        if any(word in line.lower() for word in experience_keywords):
+
+            dates = re.findall(r"\d{2}/\d{4}", line)
+
+            if len(dates) >= 2:
+
+                start = datetime.strptime(dates[0], "%m/%Y")
+                end = datetime.strptime(dates[1], "%m/%Y")
+
+                months += (end.year - start.year) * 12 + (end.month - start.month)
+
+    return months
