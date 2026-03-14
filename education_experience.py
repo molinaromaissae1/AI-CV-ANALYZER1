@@ -33,7 +33,7 @@ def extract_experience_months(text):
         "juillet":7,"août":8,"septembre":9,"octobre":10,"novembre":11,"décembre":12
     }
 
-    pattern = r"(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4}).*?(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4})"
+   pattern = r"(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4}).*?(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s*(\d{4})"
 
     match = re.search(pattern, text)
 
