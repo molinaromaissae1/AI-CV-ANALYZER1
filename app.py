@@ -9,7 +9,7 @@ from features import (
     extract_sector
 )
 
-from education_experience import extract_education, extract_experience, extract_experience_months
+from education_experience import extract_education, extract_experience_months
 st.set_page_config(
     page_title="AI CV Analyzer",
     page_icon="🤖",
