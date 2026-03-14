@@ -27,12 +27,16 @@ uploaded_file = st.file_uploader(
     "📄 Upload CV (PDF)",
     type=["pdf"]
 )
+def extract_experience(text):
+    return "0 months"
 
+def extract_experience_months(text):
+    return 0
 if uploaded_file is not None:
 
-    text = extract_text_from_pdf(uploaded_file)
+text = extract_text_from_pdf(uploaded_file)
 
-    clean_text = preprocess_text(text)
+clean_text = preprocess_text(text)
 
 experience = extract_experience(clean_text)
 experience_months = extract_experience_months(clean_text)
