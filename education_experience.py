@@ -1,37 +1,60 @@
 import re
 
-months_map = {
-    "janvier":1,"février":2,"fevrier":2,"mars":3,"avril":4,"mai":5,
-    "juin":6,"juillet":7,"août":8,"aout":8,"septembre":9,
-    "octobre":10,"novembre":11,"décembre":12,"decembre":12,
-    "january":1,"february":2,"march":3,"april":4,"may":5,"june":6,
-    "july":7,"august":8,"september":9,"october":10,"november":11,"december":12
+def extract_education(text):
+
+    text = text.lower()
+
+    if "master" in text or "bac+5" in text or "ingenieur" in text:
+        return "Bac+5"
+
+    if ("licence" in text 
+        or "3e annee" in text
+        or "3 eme annee" in text
+        or "3eme annee" in text
+        or "troisieme annee" in text
+        or "bac+3" in text):
+        return "Bac+3"
+
+    if "bts" in text or "dut" in text or "bac+2" in text:
+        return "Bac+2"
+
+    if "bac" in text or "baccalaureat" in text:
+        return "Bac"
+
+    return "Unknown"
+
+
+# ------------------------
+
+months = {
+    "janvier":1,"fevrier":2,"mars":3,"avril":4,"mai":5,"juin":6,
+    "juillet":7,"aout":8,"septembre":9,"octobre":10,"novembre":11,"decembre":12
 }
 
 def extract_experience_months(text):
 
     text = text.lower()
 
-    pattern = r"(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|january|february|march|april|may|june|july|august|september|october|november|december)\s*(\d{4}).*?(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|january|february|march|april|may|june|july|august|september|october|november|december)\s*(\d{4})"
+    pattern = r"(janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre).*?(janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre)"
 
-    matches = re.findall(pattern, text)
+    match = re.search(pattern,text)
 
-    total_months = 0
+    if match:
 
-    for match in matches:
+        start = months[match.group(1)]
+        end = months[match.group(2)]
 
-        start_month = months_map[match[0]]
-        start_year = int(match[1])
+        diff = end - start
 
-        end_month = months_map[match[2]]
-        end_year = int(match[3])
+        if diff <= 0:
+            diff = 1
 
-        months = (end_year - start_year) * 12 + (end_month - start_month)
+        return diff
 
-        if months > 0:
-            total_months += months
+    if "stage" in text:
+        return 3
 
-    return total_months
+    return 0
 
 
 def extract_experience(text):
