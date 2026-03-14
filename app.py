@@ -62,12 +62,12 @@ if uploaded_file is not None:
     st.subheader("💼 Skills")
 
     for skill in skills:
-    st.success(skill)
+        st.success(skill)
 
-st.subheader("🌍 Languages")
+    st.subheader("🌍 Languages")
 
-for lang in languages:
-    st.info(lang)
+    for lang in languages:
+        st.info(lang)
 
     # -----------------
     # ATS SCORE
