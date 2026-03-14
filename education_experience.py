@@ -1,26 +1,29 @@
 import re
 from datetime import datetime
-
 def extract_education(text):
+
     text = text.lower()
-    
-    # إذا كاين "3éme" أو "3ème" أو "licence" → Bac+3 فوراً
-    if re.search(r'3éme|3ème|3eme|troisième|licence|l3', text):
-        return "Bac+3"
-    
-    # Master
+
+    # Bac+5
     if re.search(r'master|ingenieur|bac\s*\+\s*5', text):
         return "Bac+5"
-    
-    # BTS
+
+    # Bac+3
+    if re.search(r'3e|3eme|3ème|troisième|licence|bachelor|année de gestion|l3', text):
+        return "Bac+3"
+
+    # Bac+2
     if re.search(r'bts|dut|bac\s*\+\s*2', text):
         return "Bac+2"
-    
-    # BAC
-    if re.search(r'\bbac\b', text):
+
+    # Bac
+    if re.search(r'\bbaccalauréat\b', text):
         return "Bac"
-    
+
     return "Unknown"
+
+    
+   
 
 def extract_experience_months(text):
     text = text.lower()
