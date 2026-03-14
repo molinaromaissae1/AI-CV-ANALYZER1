@@ -33,7 +33,7 @@ if uploaded_file is not None:
     clean_text = preprocess_text(text)
     
     
-    experience_months = extract_experience_months(clean_text)
+   experience_months = extract_experience_months_fixed(clean_text)
 
     education = extract_education(clean_text)
     skills = extract_skills(clean_text)
