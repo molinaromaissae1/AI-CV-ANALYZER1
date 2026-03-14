@@ -33,7 +33,7 @@ if uploaded_file is not None:
     clean_text = preprocess_text(text)
     st.subheader("DEBUG TEXT")
     st.write(clean_text[:1500])
-    experience = extract_experience(clean_text)
+    
     experience_months = extract_experience_months(clean_text)
 
     education = extract_education(clean_text)
@@ -47,7 +47,7 @@ if uploaded_file is not None:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric("Experience Duration", experience)
+        st.metric("Experience Duration", experience_months)
         st.metric("Education Level", education)
 
     with col2:
