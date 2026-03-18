@@ -1,27 +1,45 @@
-def calculate_ats_score(experience, skills, languages, education):
+def calculate_global_score(data):
+    
+    # Extract data
+    experience = data.get("experience", 0)
+    skills = data.get("skills", [])
+    languages = data.get("languages", [])
+    education = data.get("education", "")
 
     score = 0
 
-    # experience
-    score += experience * 20
+    # -------------------------
+    # EXPERIENCE (max 20)
+    # -------------------------
+    score += min(experience * 2, 20)
 
-    # skills
-    score += len(skills) * 5
+    # -------------------------
+    # SKILLS (max ~30)
+    # -------------------------
+    score += len(skills) * 3
 
-    # languages
-    score += len(languages) * 5
+    # -------------------------
+    # LANGUAGES (max ~30)
+    # -------------------------
+    score += len(languages) * 3
 
-    # education
+    # -------------------------
+    # EDUCATION
+    # -------------------------
     if education == "Bac+5":
         score += 20
     elif education == "Bac+3":
         score += 15
     elif education == "Bac+2":
         score += 10
-    else:
+    elif education == "Bac+1":
+        score += 8
+    elif education == "Bac":
         score += 5
+    else:
+        score += 3
 
-    if score > 100:
-        score = 100
-
-    return score
+    # -------------------------
+    # LIMIT SCORE
+    # -------------------------
+    return min(score, 100)
