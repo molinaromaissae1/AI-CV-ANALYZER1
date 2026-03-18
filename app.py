@@ -189,8 +189,9 @@ if uploaded_files:
             "Education": education,
             "Experience (months)": experience_months,
             "Skills": len(skills),
-            "Matched Skills": len(matched_skills),
-            "Languages": len(languages),
+            "Matched Skills": ", ".join(matched_skills) if matched_skills else "None",
+            "Languages": ", ".join(languages) if languages
+    
             "Companies": len(companies),
             "Sector": sector
         })
