@@ -90,15 +90,15 @@ if uploaded_files:
         if not isinstance(skills, list):
             skills = []
 
-       languages = extract_languages(clean_text)
-       if not isinstance(languages, list):
-           languages = []
+        languages = extract_languages(clean_text)
+        if not isinstance(languages, list):
+            languages = []
 
-       sector = extract_sector(clean_text)
+        sector = extract_sector(clean_text)
 
-       companies = extract_companies(clean_text)
-       if not isinstance(companies, list):
-          companies = []
+        companies = extract_companies(clean_text)
+        if not isinstance(companies, list):
+            companies = []
 
         # 3. Global score
         data = {
