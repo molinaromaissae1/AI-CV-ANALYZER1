@@ -1,12 +1,13 @@
 import re
 
-# -------------------------
+# =========================
 # SKILLS
-# -------------------------
+# =========================
 def extract_skills(text):
     skills_list = [
         "python", "excel", "communication", "management",
-        "recruitment", "hr", "powerpoint", "word"
+        "recruitment", "hr", "powerpoint", "word",
+        "organisation", "gestion", "teamwork"
     ]
 
     text = text.lower()
@@ -16,13 +17,13 @@ def extract_skills(text):
         if skill in text:
             found_skills.append(skill)
 
-    return found_skills
+    return list(set(found_skills))
 
 
-# -------------------------
-# LANGUAGES + LEVEL
-# -------------------------
--def extract_languages(text):
+# =========================
+# LANGUAGES
+# =========================
+def extract_languages(text):
     text = text.lower()
 
     patterns = {
@@ -64,34 +65,37 @@ def extract_skills(text):
 
     return languages
 
-    
 
-
-# -------------------------
+# =========================
 # COMPANIES
-# -------------------------
+# =========================
 def extract_companies(text):
-    words = text.split()
-    companies = []
+    companies = [
+        "safran", "deloitte", "capgemini", "google",
+        "amazon", "microsoft", "apple"
+    ]
 
-    for word in words:
-        if word.istitle():
-            companies.append(word)
+    text = text.lower()
+    found = []
 
-    return list(set(companies))
+    for c in companies:
+        if c in text:
+            found.append(c)
+
+    return found
 
 
-# -------------------------
+# =========================
 # SECTOR
-# -------------------------
+# =========================
 def extract_sector(text):
     text = text.lower()
 
-    if "finance" in text:
-        return "Finance"
-    elif "hr" in text or "ressources humaines" in text:
+    if "hr" in text or "ressources humaines" in text:
         return "HR"
-    elif "engineering" in text or "industrial" in text:
+    elif "finance" in text:
+        return "Finance"
+    elif "engineering" in text:
         return "Engineering"
-
-    return "Unknown"
+    else:
+        return "Other"
