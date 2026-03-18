@@ -1,4 +1,9 @@
 import streamlit as st
+import pandas as pd
+
+# -------------------------
+# IMPORTS
+# -------------------------
 from reader import extract_text_from_pdf
 from preprocess import preprocess_text
 
@@ -10,6 +15,12 @@ from features import (
 )
 
 from education_experience import extract_education, extract_experience_months
+from ats_scoring import calculate_global_score
+
+
+# -------------------------
+# CONFIG
+# -------------------------
 st.set_page_config(
     page_title="AI CV Analyzer",
     page_icon="🤖",
@@ -17,85 +28,145 @@ st.set_page_config(
 )
 
 st.title("🤖 AI CV Analyzer for HR")
-st.write("Upload a CV and the system will analyze it automatically.")
+st.write("Upload CVs and match them with a job (fiche de poste)")
 
-uploaded_file = st.file_uploader(
-    "📄 Upload CV (PDF)",
-    type=["pdf"]
+# -------------------------
+# FICHE DE POSTE (SIDEBAR)
+# -------------------------
+st.sidebar.title("🎯 Fiche de poste")
+
+job_skills = st.sidebar.text_input(
+    "Required Skills",
+    "recruitment, communication, HR"
 )
 
+job_education = st.sidebar.selectbox(
+    "Required Education",
+    ["Bac", "Bac+2", "Bac+3", "Bac+5"]
+)
 
+job_experience = st.sidebar.slider(
+    "Minimum Experience (months)",
+    0, 60, 12
+)
 
-if uploaded_file is not None:
+# -------------------------
+# UPLOAD
+# -------------------------
+uploaded_files = st.file_uploader(
+    "📄 Upload CVs (PDF)",
+    type=["pdf"],
+    accept_multiple_files=True
+)
 
-    text = extract_text_from_pdf(uploaded_file)
+# -------------------------
+# PROCESS
+# -------------------------
+results = []
 
-    clean_text = preprocess_text(text)
-    
-    
-    experience_months = extract_experience_months(clean_text)
+if uploaded_files:
 
-    education = extract_education(clean_text)
-    skills = extract_skills(clean_text)
-    languages = extract_languages(clean_text)
-    sector = extract_sector(clean_text)
-    companies = extract_companies(clean_text)
+    job_skills_list = [s.strip().lower() for s in job_skills.split(",")]
 
-    st.subheader("📊 Extracted Information")
+    for file in uploaded_files:
 
-    col1, col2 = st.columns(2)
+        # 1. Extract text
+        text = extract_text_from_pdf(file)
+        clean_text = preprocess_text(text)
 
-    with col1:
-        st.metric("Experience Duration", experience_months)
-        st.metric("Education Level", education)
+        # 2. Extract features
+        experience_months = extract_experience_months(clean_text)
+        education = extract_education(clean_text)
+        skills = extract_skills(clean_text)
+        languages = extract_languages(clean_text)
+        sector = extract_sector(clean_text)
+        companies = extract_companies(clean_text)
 
-    with col2:
-        st.metric("Sector", sector)
-        st.metric("Companies", companies)
+        # 3. Global score
+        data = {
+            "skills": skills,
+            "languages": languages,
+            "education": education,
+            "experience": experience_months
+        }
 
-    st.subheader("💼 Skills")
+        score = calculate_global_score(data)
 
-    for skill in skills:
-        st.success(skill)
+        # -------------------------
+        # MATCHING (fiche de poste)
+        # -------------------------
+        matching_score = 0
 
-    st.subheader("🌍 Languages")
+        # Skills matching
+        matching_score += len(set(skills).intersection(job_skills_list)) * 5
 
-    for lang in languages:
-        st.info(lang)
+        # Experience matching
+        if experience_months >= job_experience:
+            matching_score += 20
 
-    # -----------------
-    # ATS SCORE
-    # -----------------
+        # Education matching
+        if education == job_education:
+            matching_score += 20
 
-    score = 0
+        # -------------------------
+        # STATUS
+        # -------------------------
+        if matching_score >= 60:
+            status = "🟢 Good"
+        elif matching_score >= 30:
+            status = "🟡 Average"
+        else:
+            status = "🔴 Weak"
 
-    score += min(experience_months * 5, 20)
-    score += len(skills) * 5
-    score += len(languages) * 5
+        # -------------------------
+        # SAVE RESULT
+        # -------------------------
+        results.append({
+            "CV": file.name,
+            "Score": score,
+            "Matching Score": matching_score,
+            "Status": status,
+            "Education": education,
+            "Experience (months)": experience_months,
+            "Skills": len(skills),
+            "Languages": len(languages),
+            "Companies": len(companies),
+            "Sector": sector
+        })
 
-    if education == "Bac+5":
-        score += 20
-    elif education == "Bac+3":
-        score += 15
-    elif education == "Bac+2":
-        score += 10
+    # -------------------------
+    # TABLE
+    # -------------------------
+    df = pd.DataFrame(results)
+    df = df.sort_values(by="Matching Score", ascending=False)
+
+    # Colors
+    def color_status(val):
+        if "Good" in val:
+            return "background-color: lightgreen"
+        elif "Average" in val:
+            return "background-color: khaki"
+        else:
+            return "background-color: lightcoral"
+
+    styled_df = df.style.applymap(color_status, subset=["Status"])
+
+    st.subheader("📊 Candidates Ranking")
+    st.dataframe(styled_df, use_container_width=True)
+
+    # -------------------------
+    # BEST CANDIDATE
+    # -------------------------
+    best = df.iloc[0]
+
+    st.subheader("🏆 Best Candidate")
+
+    if best["Matching Score"] >= 60:
+        st.success(f"{best['CV']} - Excellent Match ({best['Matching Score']})")
+    elif best["Matching Score"] >= 30:
+        st.warning(f"{best['CV']} - Medium Match ({best['Matching Score']})")
     else:
-        score += 5
+        st.error(f"{best['CV']} - Weak Match ({best['Matching Score']})")
 
-    if score > 100:
-        score = 100
-
-    st.subheader("📈 ATS Score")
-
-    st.progress(score)
-
-    st.write("Score:", score)
-
-    if score > 70:
-        st.success("🟢 Good Candidate")
-# update
-    elif score >= 40:
-        st.warning("🟡 Average Candidate")
-
-    else:
-        st.error("🔴 Weak Candidate")
+else:
+    st.info("⬆️ Upload CVs to start analysis")
