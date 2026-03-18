@@ -17,7 +17,6 @@ from features import (
 from education_experience import extract_education, extract_experience_months
 from ats_scoring import calculate_global_score
 
-
 # -------------------------
 # CONFIG
 # -------------------------
@@ -42,12 +41,17 @@ job_skills = st.sidebar.text_input(
 
 job_education = st.sidebar.selectbox(
     "Required Education",
-    ["Bac", "Bac+2", "Bac+3", "Bac+5"]
+    ["Bac", "Bac+1", "Bac+2", "Bac+3", "Bac+5", "Doctorat"]
 )
 
 job_experience = st.sidebar.slider(
     "Minimum Experience (months)",
     0, 60, 12
+)
+
+job_language = st.sidebar.selectbox(
+    "Language Level",
+    ["A1", "A2", "B1", "B2", "C1", "C2"]
 )
 
 # -------------------------
@@ -93,20 +97,57 @@ if uploaded_files:
         score = calculate_global_score(data)
 
         # -------------------------
-        # MATCHING (fiche de poste)
+        # MATCHING SMART
         # -------------------------
         matching_score = 0
 
-        # Skills matching
+        # SKILLS
         matching_score += len(set(skills).intersection(job_skills_list)) * 5
 
-        # Experience matching
+        # EDUCATION SMART
+        education_levels = {
+            "Bac": 1,
+            "Bac+1": 2,
+            "Bac+2": 3,
+            "Bac+3": 4,
+            "Bac+5": 5,
+            "Doctorat": 6
+        }
+
+        candidate_level = education_levels.get(education, 0)
+        required_level = education_levels.get(job_education, 0)
+
+        if candidate_level >= required_level:
+            matching_score += 20
+        elif candidate_level == required_level - 1:
+            matching_score += 10
+
+        # EXPERIENCE SMART
         if experience_months >= job_experience:
             matching_score += 20
+        elif experience_months >= job_experience / 2:
+            matching_score += 10
 
-        # Education matching
-        if education == job_education:
+        # LANGUAGE SMART
+        language_levels = {
+            "A1": 1, "A2": 2,
+            "B1": 3, "B2": 4,
+            "C1": 5, "C2": 6
+        }
+
+        candidate_lang_level = 0
+
+        for lang in languages:
+            lvl = language_levels.get(lang.upper(), 0)
+            if lvl > candidate_lang_level:
+                candidate_lang_level = lvl
+
+        required_lang_level = language_levels.get(job_language, 0)
+
+        if candidate_lang_level >= required_lang_level:
             matching_score += 20
+        elif candidate_lang_level == required_lang_level - 1:
+            matching_score += 10
 
         # -------------------------
         # STATUS
@@ -140,7 +181,6 @@ if uploaded_files:
     df = pd.DataFrame(results)
     df = df.sort_values(by="Matching Score", ascending=False)
 
-    # Colors
     def color_status(val):
         if "Good" in val:
             return "background-color: lightgreen"
