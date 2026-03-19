@@ -20,40 +20,49 @@ def extract_languages(text):
 
     results = []
 
-    # Arabic
-    if "arabe" in text or "arabic" in text:
-        if "maternelle" in text:
-            level = "C2"
-        else:
-            level = "Unknown"
-        results.append({"name": "Arabic", "level": level})
+    # نحيد الlabels
+    text = text.replace("langues :", "").replace("languages :", "")
 
-    # French
-    if "français" in text or "french" in text:
-        if "c1" in text:
-            level = "C1"
-        else:
-            level = "Unknown"
-        results.append({"name": "French", "level": level})
+    # نقسم حسب الفواصل
+    parts = text.split(",")
 
-    # English
-    if "anglais" in text or "english" in text:
-        if "c1" in text:
-            level = "C1"
-        else:
-            level = "Unknown"
-        results.append({"name": "English", "level": level})
+    for part in parts:
+        part = part.strip()
 
-    # Spanish
-    if "espagnole" in text or "spanish" in text:
-        if "a2" in text:
-            level = "A2"
-        else:
-            level = "Unknown"
-        results.append({"name": "Spanish", "level": level})
+        # Arabic
+        if "arabe" in part or "arabic" in part:
+            if "maternelle" in part:
+                level = "C2"
+            else:
+                level = "Unknown"
+            results.append({"name": "Arabic", "level": level})
+
+        # French
+        elif "français" in part or "french" in part:
+            if "c1" in part:
+                level = "C1"
+            else:
+                level = "Unknown"
+            results.append({"name": "French", "level": level})
+
+        # English
+        elif "anglais" in part or "english" in part:
+            if "c1" in part:
+                level = "C1"
+            else:
+                level = "Unknown"
+            results.append({"name": "English", "level": level})
+
+        # Spanish
+        elif "espagnole" in part or "spanish" in part:
+            if "a2" in part:
+                level = "A2"
+            else:
+                level = "Unknown"
+            results.append({"name": "Spanish", "level": level})
 
     return results
-   
+    
 
 def extract_companies(text):
     companies = ["safran", "airbus", "deloitte"]
