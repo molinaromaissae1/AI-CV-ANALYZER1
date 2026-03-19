@@ -115,7 +115,7 @@ if uploaded_files:
             "Matched Skills": ", ".join(matched_skills),
             "Languages": ", ".join([f"{l['name']} ({l['level']})" for l in languages]),
             "Companies": len(companies),
-            "Sector": sector,
+            
             "Status": status
         })
 
