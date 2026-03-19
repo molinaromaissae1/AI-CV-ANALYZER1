@@ -7,7 +7,7 @@ def extract_skills(text):
     skills_list = [
         "python", "excel", "communication", "management",
         "recruitment", "hr", "powerpoint", "word",
-        "organisation", "gestion", "teamwork"
+        "organisation", "gestion", "analysis"
     ]
 
     text = text.lower()
@@ -17,11 +17,11 @@ def extract_skills(text):
         if skill in text:
             found_skills.append(skill)
 
-    return list(set(found_skills))
+    return found_skills
 
 
 # =========================
-# LANGUAGES
+# LANGUAGES (SMART VERSION)
 # =========================
 def extract_languages(text):
     text = text.lower()
@@ -43,17 +43,18 @@ def extract_languages(text):
 
                 level = "Unknown"
 
-                # 🧠 ناخدو window صغير حول الكلمة
                 index = text.find(word)
-                context = text[max(0, index-30): index+30]
 
-                # 🔍 check levels
+                # 🎯 context صغير باش مايتخلطوش اللغات
+                context = text[max(0, index-15): index+15]
+
+                # 🔍 detect level
                 for lvl in levels:
                     if lvl in context:
                         level = lvl.upper()
 
-                # 🔥 maternel غير لهد اللغة
-                if "maternel" in context or "native" in context:
+                # 🔥 maternel فقط إذا ماكان حتى level
+                if ("maternel" in context or "native" in context) and level == "Unknown":
                     level = "C2"
 
                 results.append({
@@ -65,41 +66,40 @@ def extract_languages(text):
 
     return results
 
-   
-
-          
-
 
 # =========================
 # COMPANIES
 # =========================
 def extract_companies(text):
     companies = [
-        "safran", "deloitte", "capgemini", "google",
-        "amazon", "microsoft", "apple"
+        "safran", "airbus", "deloitte", "pwc", "ey",
+        "capgemini", "accenture", "atos"
     ]
 
     text = text.lower()
     found = []
 
-    for c in companies:
-        if c in text:
-            found.append(c)
+    for company in companies:
+        if company in text:
+            found.append(company.capitalize())
 
     return found
 
 
 # =========================
-# SECTOR
+# EXPERIENCE (months)
 # =========================
-def extract_sector(text):
-    text = text.lower()
+def extract_experience(text):
+    matches = re.findall(r'(\d+)\s*(year|years|month|months)', text.lower())
 
-    if "hr" in text or "ressources humaines" in text:
-        return "HR"
-    elif "finance" in text:
-        return "Finance"
-    elif "engineering" in text:
-        return "Engineering"
-    else:
-        return "Other"
+    total_months = 0
+
+    for num, unit in matches:
+        num = int(num)
+
+        if "year" in unit:
+            total_months += num * 12
+        else:
+            total_months += num
+
+    return total_months
