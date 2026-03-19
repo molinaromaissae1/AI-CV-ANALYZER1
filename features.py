@@ -17,35 +17,44 @@ def extract_languages(text):
         "English": ["english", "anglais"],
         "French": ["french", "français"],
         "Arabic": ["arabic", "arabe"],
-        "Spanish": ["spanish", "espagnol"]
+        "Spanish": ["spanish", "espagnol", "espagnole"]
     }
-
-    levels = ["a1", "a2", "b1", "b2", "c1", "c2"]
 
     results = []
 
     for lang, keys in languages.items():
         for word in keys:
             if word in text:
+
                 level = "Unknown"
 
-                idx = text.find(word)
-                context = text[max(0, idx-15): idx+15]
+                # 🧠 خدي سطر كامل فيه اللغة
+                lines = text.split("\n")
+                for line in lines:
+                    if word in line:
 
-                for lvl in levels:
-                    if lvl in context:
-                        level = lvl.upper()
-
-                if ("maternel" in context or "native" in context) and level == "Unknown":
-                    level = "C2"
+                        if "c2" in line or "maternel" in line:
+                            level = "C2"
+                        elif "c1" in line:
+                            level = "C1"
+                        elif "b2" in line:
+                            level = "B2"
+                        elif "b1" in line:
+                            level = "B1"
+                        elif "a2" in line:
+                            level = "A2"
+                        elif "a1" in line:
+                            level = "A1"
 
                 results.append({
                     "name": lang,
                     "level": level
                 })
+
                 break
 
     return results
+    
 
 
 def extract_companies(text):
