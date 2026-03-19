@@ -17,48 +17,38 @@ import re
 
 def extract_languages(text):
     text = text.lower()
+    words = text.split()
 
     results = []
 
-    # نحيد الlabels
-    text = text.replace("langues :", "").replace("languages :", "")
-
-    # نقسم حسب الفواصل
-    parts = text.split(",")
-
-    for part in parts:
-        part = part.strip()
+    for i, word in enumerate(words):
 
         # Arabic
-        if "arabe" in part or "arabic" in part:
-            if "maternelle" in part:
+        if word in ["arabe", "arabic"]:
+            level = "Unknown"
+            if i+1 < len(words) and words[i+1] in ["maternelle"]:
                 level = "C2"
-            else:
-                level = "Unknown"
             results.append({"name": "Arabic", "level": level})
 
         # French
-        elif "français" in part or "french" in part:
-            if "c1" in part:
-                level = "C1"
-            else:
-                level = "Unknown"
+        if word in ["français", "french"]:
+            level = "Unknown"
+            if i+1 < len(words) and words[i+1] in ["c1", "c2"]:
+                level = words[i+1].upper()
             results.append({"name": "French", "level": level})
 
         # English
-        elif "anglais" in part or "english" in part:
-            if "c1" in part:
-                level = "C1"
-            else:
-                level = "Unknown"
+        if word in ["anglais", "english"]:
+            level = "Unknown"
+            if i+1 < len(words) and words[i+1] in ["c1", "c2"]:
+                level = words[i+1].upper()
             results.append({"name": "English", "level": level})
 
         # Spanish
-        elif "espagnole" in part or "spanish" in part:
-            if "a2" in part:
+        if word in ["espagnole", "spanish"]:
+            level = "Unknown"
+            if i+1 < len(words) and words[i+1] in ["a2"]:
                 level = "A2"
-            else:
-                level = "Unknown"
             results.append({"name": "Spanish", "level": level})
 
     return results
