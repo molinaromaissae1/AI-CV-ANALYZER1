@@ -60,7 +60,7 @@ if uploaded_files:
         education = extract_education(clean_text)
         skills = extract_skills(clean_text)
         languages = extract_languages(clean_text)
-        sector = extract_sector(clean_text)
+        
         companies = extract_companies(clean_text)
 
         # Global score
