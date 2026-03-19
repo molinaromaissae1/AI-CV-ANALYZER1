@@ -4,7 +4,7 @@ import pandas as pd
 from reader import extract_text_from_pdf
 from preprocess import preprocess_text
 
-from features import extract_skills, extract_languages, extract_companies, extract_sector
+from features import extract_skills, extract_languages, extract_companies
 from education_experience import extract_education, extract_experience_months
 from ats_scoring import calculate_global_score
 
