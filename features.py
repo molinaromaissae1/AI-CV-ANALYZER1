@@ -26,44 +26,50 @@ def extract_skills(text):
 def extract_languages(text):
     text = text.lower()
 
-    patterns = {
-        "english": r"(english|anglais)\s*[:\-]?\s*(a1|a2|b1|b2|c1|c2)?",
-        "french": r"(français|french)\s*[:\-]?\s*(a1|a2|b1|b2|c1|c2)?",
-        "arabic": r"(arabe|arabic)\s*[:\-]?\s*(a1|a2|b1|b2|c1|c2)?"
+    languages_list = {
+        "english": ["english", "anglais"],
+        "french": ["french", "français"],
+        "arabic": ["arabic", "arabe"],
+        "spanish": ["spanish", "espagnol", "espagnole"]
     }
 
     level_mapping = {
-        "a1": "A1",
-        "a2": "A2",
-        "b1": "B1",
-        "b2": "B2",
-        "c1": "C1",
-        "c2": "C2"
+        "a1": "A1", "a2": "A2",
+        "b1": "B1", "b2": "B2",
+        "c1": "C1", "c2": "C2",
+        "intermediate": "B1",
+        "fluent": "C1",
+        "courant": "C1"
     }
 
-    languages = []
+    results = []
 
-    for lang, pattern in patterns.items():
-        matches = re.findall(pattern, text)
+    for lang, keywords in languages_list.items():
+        for word in keywords:
+            if word in text:
 
-        for match in matches:
-            level = match[1]
-
-            if "maternel" in match[0] or "native" in match[0]:
-                level = "C2"
-
-            elif level in level_mapping:
-                level = level_mapping[level]
-
-            else:
                 level = "Unknown"
 
-            languages.append({
-                "name": lang.capitalize(),
-                "level": level
-            })
+                # 🔍 نبحث على المستوى قريب من الكلمة
+                for lvl in level_mapping:
+                    if word + " " + lvl in text or lvl + " " + word in text:
+                        level = level_mapping[lvl]
 
-    return languages
+                # 🔥 maternel
+                if "maternel" in text or "native" in text:
+                    if word in text:
+                        level = "C2"
+
+                results.append({
+                    "name": lang.capitalize(),
+                    "level": level
+                })
+                break
+
+    return results
+   
+
+          
 
 
 # =========================
